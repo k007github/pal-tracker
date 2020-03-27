@@ -9,7 +9,7 @@ repositories {
 }
 
 bootJar {
-   mainClassName = 'io.pivotal.pal.tracker.PalTrackerApplication'
+    mainClassName = 'io.pivotal.pal.tracker.PalTrackerApplication'
 }
 
 dependencies {
@@ -20,11 +20,11 @@ dependencies {
     }
 }
 bootRun.environment([
-    "WELCOME_MESSAGE": "hello",
+        "WELCOME_MESSAGE": "hello",
 ])
 
 test.environment([
-    "WELCOME_MESSAGE": "Hello from test",
+        "WELCOME_MESSAGE": "Hello from test",
 ])
 
 test {
