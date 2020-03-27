@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.sql.DataSource;
+
 @SpringBootApplication
 
 
@@ -19,9 +21,14 @@ public class PalTrackerApplication {
                 args);
     }
 
+//    @Bean
+//    TimeEntryRepository timeEntryBean(){
+//        return new InMemoryTimeEntryRepository();
+//    }
+
     @Bean
-    TimeEntryRepository timeEntryBean(){
-        return new InMemoryTimeEntryRepository();
+    TimeEntryRepository timeEntryRepository(DataSource dataSource) {
+        return new JdbcTimeEntryRepository(dataSource);
     }
     @GetMapping
     public String message() {
