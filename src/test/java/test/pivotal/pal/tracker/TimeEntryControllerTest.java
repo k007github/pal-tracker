@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.DistributionSummary;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,11 +23,7 @@ public class TimeEntryControllerTest {
     private TimeEntryRepository timeEntryRepository;
     private TimeEntryController controller;
 
-    @BeforeEach
-    public void setUp() {
-        timeEntryRepository = mock(TimeEntryRepository.class);
-        controller = new TimeEntryController(timeEntryRepository);
-    }
+
 
     @Test
     public void testCreate() {
@@ -123,5 +121,20 @@ public class TimeEntryControllerTest {
         ResponseEntity response = controller.delete(timeEntryId);
         verify(timeEntryRepository).delete(timeEntryId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+    @BeforeEach
+    public void setUp() throws Exception {
+        timeEntryRepository = mock(TimeEntryRepository.class);
+        MeterRegistry meterRegistry = mock(MeterRegistry.class);
+
+        doReturn(mock(DistributionSummary.class))
+                .when(meterRegistry)
+                .summary("timeEntry.summary");
+
+        doReturn(mock(Counter.class))
+                .when(meterRegistry)
+                .counter("timeEntry.actionCounter");
+
+        controller = new TimeEntryController(timeEntryRepository, meterRegistry);
     }
 }
